@@ -240,17 +240,20 @@
 })(window.jQuery);
 
 function showForm(formId) {
-  document.getElementById("one-dimension").style.display = "none";
+  // Menghapus bagian terkait "one-dimension"
+  // document.getElementById("one-dimension").style.display = "none";
   document.getElementById("two-dimension").style.display = "none";
   document.getElementById("three-dimension").style.display = "none";
-  document.getElementById("btn-one-dimension").classList.remove("active");
+  // document.getElementById("btn-one-dimension").classList.remove("active");
   document.getElementById("btn-two-dimension").classList.remove("active");
   document.getElementById("btn-three-dimension").classList.remove("active");
 
-  if (formId === "one-dimension") {
-    document.getElementById("one-dimension").style.display = "block";
-    document.getElementById("btn-one-dimension").classList.add("active");
-  } else if (formId === "two-dimension") {
+  // Mengabaikan "one-dimension" dalam logika if
+  // if (formId === "one-dimension") {
+  //     document.getElementById("one-dimension").style.display = "block";
+  //     document.getElementById("btn-one-dimension").classList.add("active");
+  // } else
+  if (formId === "two-dimension") {
     document.getElementById("two-dimension").style.display = "block";
     document.getElementById("btn-two-dimension").classList.add("active");
   } else if (formId === "three-dimension") {
@@ -260,43 +263,78 @@ function showForm(formId) {
 }
 
 //START FUNGSI KE 1
-
-function calculateAngle() {
+// Fungsi untuk menghitung sudut antara dua vektor satu dimensi
+// Fungsi untuk menghitung sudut antara dua vektor satu dimensi
+// Fungsi untuk menghitung sudut antara dua vektor satu dimensi
+function calculateAngleOneDim() {
   // Mendapatkan nilai dari input
   var vectorA = parseFloat(document.getElementById("one-var1").value);
   var vectorB = parseFloat(document.getElementById("one-var2").value);
 
-  // Menghitung dot product
-  var dotProduct = vectorA * vectorB;
+  // Menghitung sudut antara vektor A dan B
+  var angleDeg = Math.atan2(vectorB, vectorA) * (180 / Math.PI);
 
-  // Menghitung magnitudo vektor A dan B
-  var magnitudeA = Math.abs(vectorA);
-  var magnitudeB = Math.abs(vectorB);
+  // Menampilkan hasil
+  document.getElementById("output-one").innerHTML =
+    "Sudut antara vektor A dan B adalah: " + angleDeg.toFixed(2) + "°";
 
-  // Menghitung sudut dalam radian
-  var angleRad = Math.atan2(magnitudeB, magnitudeA);
-
-  // Mengkonversi sudut dari radian ke derajat
-  var angleDeg = (180 / Math.PI) * angleRad;
-
-  // 7. Menampilkan output
+  // Menampilkan output
   var outputs = document.getElementsByClassName("outputHitung");
   for (var i = 0; i < outputs.length; i++) {
     outputs[i].style.display = "block";
   }
 
-  // Menampilkan hasil
-  document.getElementById("output-one").innerHTML =
-    "Sudut antara vektor A dan B adalah: " + angleDeg.toFixed(2) + "°";
+  // Menggambar grafik kartesius satu dimensi
+  drawGraphOneDim(vectorA, vectorB, angleDeg.toFixed(2));
 }
 
-// Menambahkan event listener untuk tombol "Calculate Angle"
-document
-  .getElementById("form-submit-one")
-  .addEventListener("click", calculateAngle);
+function drawGraphOneDim(vectorA, vectorB, angleDeg) {
+  var traceA = {
+    x: [0, vectorA],
+    y: [0, 0],
+    mode: "lines+text",
+    type: "scatter",
+    name: "Vector A",
+    line: { color: "red", width: 5 },
+    text: [`0`, vectorA.toFixed(2)],
+    textposition: "top right",
+  };
 
-// Fungsi untuk mereset input dan output
-function resetForm() {
+  var traceB = {
+    x: [0, vectorB],
+    y: [0, 0],
+    mode: "lines+text",
+    type: "scatter",
+    name: "Vector B",
+    line: { color: "blue", width: 5 },
+    text: [`0`, vectorB.toFixed(2)],
+    textposition: "top right",
+  };
+
+  var data = [traceA, traceB];
+
+  var layout = {
+    margin: { l: 0, r: 0, b: 0, t: 0 },
+    xaxis: { title: "X" },
+    yaxis: { visible: false },
+    annotations: [
+      {
+        x: (vectorA + vectorB) / 2,
+        y: 0,
+        text: `Sudut: ${angleDeg}°`,
+        showarrow: false,
+        font: {
+          color: "black",
+          size: 12,
+        },
+      },
+    ],
+  };
+
+  Plotly.newPlot("vectorGraph", data, layout);
+}
+
+function resetFormOneDim() {
   document.getElementById("one-var1").value = "";
   document.getElementById("one-var2").value = "";
   document.getElementById("output-one").innerHTML = "";
@@ -304,58 +342,129 @@ function resetForm() {
   for (var i = 0; i < outputs.length; i++) {
     outputs[i].style.display = "none";
   }
+
+  // Clear the Plotly plot
+  Plotly.purge("vectorGraph");
 }
 
-// Menambahkan event listener untuk tombol "Hitung"
+// Event listeners
 document
   .getElementById("form-submit-one")
-  .addEventListener("click", calculateAngle);
-
-// Menambahkan event listener untuk tombol "Reset"
-document.getElementById("form-reset-one").addEventListener("click", resetForm);
+  .addEventListener("click", calculateAngleOneDim);
+document
+  .getElementById("form-reset-one")
+  .addEventListener("click", resetFormOneDim);
 
 //AKHIR FUNGSI KE 1
 
 //START FUNGSI KE 2
 
 // Fungsi untuk menghitung sudut antara dua vektor dua dimensi
+// Fungsi untuk menghitung sudut antara dua vektor dua dimensi
 function calculateAngleTwoDim() {
-  // 1. Mendapatkan nilai dari input
+  // Mendapatkan nilai dari input
   var vectorAx = parseFloat(document.getElementById("two-var1").value);
   var vectorAy = parseFloat(document.getElementById("two-var2").value);
   var vectorBx = parseFloat(document.getElementById("two-var3").value);
   var vectorBy = parseFloat(document.getElementById("two-var4").value);
 
-  // 2. Menghitung dot product
+  // Menghitung dot product
   var dotProduct = vectorAx * vectorBx + vectorAy * vectorBy;
 
-  // 3. Menghitung magnitudo vektor A
+  // Menghitung magnitudo vektor A
   var magnitudeA = Math.sqrt(vectorAx * vectorAx + vectorAy * vectorAy);
 
-  // 4. Menghitung magnitudo vektor B
+  // Menghitung magnitudo vektor B
   var magnitudeB = Math.sqrt(vectorBx * vectorBx + vectorBy * vectorBy);
 
-  // 5. Menghitung cosinus sudut
+  // Menghitung cosinus sudut
   var cosTheta = dotProduct / (magnitudeA * magnitudeB);
 
-  // 6. Menghitung sudut dalam radian
+  // Menghitung sudut dalam radian
   var angleRad = Math.acos(cosTheta);
 
-  // 7. Mengkonversi sudut dari radian ke derajat
+  // Mengkonversi sudut dari radian ke derajat
   var angleDeg = (180 / Math.PI) * angleRad;
 
-  // 8. Menampilkan hasil
+  // Menampilkan hasil
   document.getElementById("output-two").innerHTML =
     "Sudut antara vektor A dan B adalah: " + angleDeg.toFixed(2) + "°";
 
-  // 9. Menampilkan output
+  // Menampilkan output
   var outputs = document.getElementsByClassName("outputHitung");
   for (var i = 0; i < outputs.length; i++) {
     outputs[i].style.display = "block";
   }
+
+  // Menggambar grafik kartesius dua dimensi
+  drawGraphTwoDim(vectorAx, vectorAy, vectorBx, vectorBy, angleDeg.toFixed(2));
 }
 
-// Fungsi untuk mereset input dan output
+function drawGraphTwoDim(ax, ay, bx, by, angleDeg) {
+  var traceA = {
+    x: [0, ax],
+    y: [0, ay],
+    mode: "lines+text",
+    type: "scatter",
+    name: "Vector A",
+    line: { color: "red", width: 5 },
+    text: [`(0,0)`, `(${ax.toFixed(2)},${ay.toFixed(2)})`],
+    textposition: "top right",
+  };
+
+  var traceB = {
+    x: [0, bx],
+    y: [0, by],
+    mode: "lines+text",
+    type: "scatter",
+    name: "Vector B",
+    line: { color: "blue", width: 5 },
+    text: [`(0,0)`, `(${bx.toFixed(2)},${by.toFixed(2)})`],
+    textposition: "top right",
+  };
+
+  // Menambahkan garis kartesian
+  var traceX = {
+    x: [0, ax > bx ? ax : bx],
+    y: [0, 0],
+    mode: "lines",
+    type: "scatter",
+    name: "X-Axis",
+    line: { color: "black", width: 2, dash: "dash" },
+  };
+
+  var traceY = {
+    x: [0, 0],
+    y: [0, ay > by ? ay : by],
+    mode: "lines",
+    type: "scatter",
+    name: "Y-Axis",
+    line: { color: "black", width: 2, dash: "dash" },
+  };
+
+  var data = [traceA, traceB, traceX, traceY];
+
+  var layout = {
+    margin: { l: 0, r: 0, b: 0, t: 0 },
+    xaxis: { title: "X" },
+    yaxis: { title: "Y" },
+    annotations: [
+      {
+        x: (ax + bx) / 2,
+        y: (ay + by) / 2,
+        text: `Sudut: ${angleDeg}°`,
+        showarrow: false,
+        font: {
+          color: "black",
+          size: 12,
+        },
+      },
+    ],
+  };
+
+  Plotly.newPlot("vectorGraphTwoDim", data, layout);
+}
+
 function resetFormTwoDim() {
   document.getElementById("two-var1").value = "";
   document.getElementById("two-var2").value = "";
@@ -366,14 +475,15 @@ function resetFormTwoDim() {
   for (var i = 0; i < outputs.length; i++) {
     outputs[i].style.display = "none";
   }
+
+  // Clear the Plotly plot
+  Plotly.purge("vectorGraphTwoDim");
 }
 
-// Menambahkan event listener untuk tombol "Hitung"
+// Event listeners
 document
   .getElementById("form-submit-two")
   .addEventListener("click", calculateAngleTwoDim);
-
-// Menambahkan event listener untuk tombol "Reset"
 document
   .getElementById("form-reset-two")
   .addEventListener("click", resetFormTwoDim);
@@ -383,8 +493,9 @@ document
 //START FUUNGSI KE 3
 
 // Fungsi untuk menghitung sudut antara dua vektor tiga dimensi
+// Fungsi untuk menghitung sudut antara dua vektor tiga dimensi
 function calculateAngleThreeDim() {
-  // 1. Mendapatkan nilai dari input
+  // Mendapatkan nilai dari input
   var vectorAx = parseFloat(document.getElementById("three-var1").value);
   var vectorAy = parseFloat(document.getElementById("three-var2").value);
   var vectorAz = parseFloat(document.getElementById("three-var3").value);
@@ -392,41 +503,120 @@ function calculateAngleThreeDim() {
   var vectorBy = parseFloat(document.getElementById("three-var5").value);
   var vectorBz = parseFloat(document.getElementById("three-var6").value);
 
-  // 2. Menghitung dot product
+  // Menghitung dot product
   var dotProduct =
     vectorAx * vectorBx + vectorAy * vectorBy + vectorAz * vectorBz;
 
-  // 3. Menghitung magnitudo vektor A
+  // Menghitung magnitudo vektor A
   var magnitudeA = Math.sqrt(
     vectorAx * vectorAx + vectorAy * vectorAy + vectorAz * vectorAz
   );
 
-  // 4. Menghitung magnitudo vektor B
+  // Menghitung magnitudo vektor B
   var magnitudeB = Math.sqrt(
     vectorBx * vectorBx + vectorBy * vectorBy + vectorBz * vectorBz
   );
 
-  // 5. Menghitung cosinus sudut
+  // Menghitung cosinus sudut
   var cosTheta = dotProduct / (magnitudeA * magnitudeB);
 
-  // 6. Menghitung sudut dalam radian
+  // Menghitung sudut dalam radian
   var angleRad = Math.acos(cosTheta);
 
-  // 7. Mengkonversi sudut dari radian ke derajat
+  // Mengkonversi sudut dari radian ke derajat
   var angleDeg = (180 / Math.PI) * angleRad;
 
-  // 8. Menampilkan hasil
+  // Menampilkan hasil
   document.getElementById("output-three").innerHTML =
     "Sudut antara vektor A dan B adalah: " + angleDeg.toFixed(2) + "°";
 
-  // 9. Menampilkan output
+  // Menampilkan output
   var outputs = document.getElementsByClassName("outputHitung");
   for (var i = 0; i < outputs.length; i++) {
     outputs[i].style.display = "block";
   }
+
+  // Menggambar grafik kartesius 3D
+  drawGraphThreeDim(
+    vectorAx,
+    vectorAy,
+    vectorAz,
+    vectorBx,
+    vectorBy,
+    vectorBz,
+    angleDeg.toFixed(2)
+  );
 }
 
-// Fungsi untuk mereset input dan output
+// Fungsi untuk menggambar grafik kartesius 3D
+function drawGraphThreeDim(ax, ay, az, bx, by, bz, angleDeg) {
+  var traceA = {
+    x: [0, ax],
+    y: [0, ay],
+    z: [0, az],
+    mode: "lines+text",
+    type: "scatter",
+    name: "Vector A",
+    line: { color: "red", width: 5 },
+    text: [`(0,0,0)`, `(${ax.toFixed(2)},${ay.toFixed(2)},${az.toFixed(2)})`],
+    textposition: "top right",
+  };
+
+  var traceB = {
+    x: [0, bx],
+    y: [0, by],
+    z: [0, bz],
+    mode: "lines+text",
+    type: "scatter",
+    name: "Vector B",
+    line: { color: "blue", width: 5 },
+    text: [`(0,0,0)`, `(${bx.toFixed(2)},${by.toFixed(2)},${bz.toFixed(2)})`],
+    textposition: "top right",
+  };
+
+  // Menambahkan garis kartesian
+  var traceX = {
+    x: [0, Math.max(ax, bx) * 1.2],
+    y: [0, 0],
+    mode: "lines",
+    type: "scatter",
+    name: "X-Axis",
+    line: { color: "black", width: 2, dash: "dash" },
+  };
+
+  var traceY = {
+    x: [0, 0],
+    y: [0, Math.max(ay, by) * 1.2],
+    mode: "lines",
+    type: "scatter",
+    name: "Y-Axis",
+    line: { color: "black", width: 2, dash: "dash" },
+  };
+
+  var data = [traceA, traceB, traceX, traceY];
+
+  var layout = {
+    margin: { l: 0, r: 0, b: 0, t: 0 },
+    xaxis: { title: "X" },
+    yaxis: { title: "Y" },
+    annotations: [
+      {
+        x: (ax + bx) / 2,
+        y: (ay + by) / 2,
+        text: `Sudut: ${angleDeg}°`,
+        showarrow: false,
+        font: {
+          color: "black",
+          size: 12,
+        },
+      },
+    ],
+  };
+
+  Plotly.newPlot("vectorGraphThreeDim", data, layout);
+}
+
+// Fungsi untuk mereset form
 function resetFormThreeDim() {
   document.getElementById("three-var1").value = "";
   document.getElementById("three-var2").value = "";
@@ -439,16 +629,31 @@ function resetFormThreeDim() {
   for (var i = 0; i < outputs.length; i++) {
     outputs[i].style.display = "none";
   }
+
+  // Menghapus plot Plotly
+  Plotly.purge("vectorGraphThreeDim");
 }
 
-// Menambahkan event listener untuk tombol "Hitung"
+function resetFormThreeDim() {
+  document.getElementById("three-var1").value = "";
+  document.getElementById("three-var2").value = "";
+  document.getElementById("three-var3").value = "";
+  document.getElementById("three-var4").value = "";
+  document.getElementById("three-var5").value = "";
+  document.getElementById("three-var6").value = "";
+  document.getElementById("output-three").innerHTML = "";
+  var outputs = document.getElementsByClassName("outputHitung");
+  for (var i = 0; i < outputs.length; i++) {
+    outputs[i].style.display = "none";
+  }
+
+  // Clear the Plotly plot
+  Plotly.purge("vectorGraphThreeDim");
+}
+
 document
   .getElementById("form-submit-three")
   .addEventListener("click", calculateAngleThreeDim);
-
-// Menambahkan event listener untuk tombol "Reset"
 document
   .getElementById("form-reset-three")
   .addEventListener("click", resetFormThreeDim);
-
-//AKHIR FUNGSI KE 3
