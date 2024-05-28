@@ -1068,7 +1068,6 @@ h2.accordion-header button {
 Courses Style
 --------------------------------------------- 
 */
-
 .courses {
   margin-top: 160px;
 }
@@ -1098,7 +1097,7 @@ Courses Style
   transition: all 0.3s;
 }
 
-.event_filter li .event_filter li a.is_active,
+.event_filter li a.is_active,
 .event_filter li a:hover {
   color: #03aed2;
 }
@@ -1111,6 +1110,8 @@ Courses Style
 
 .events_item .thumb img {
   margin-bottom: -5px;
+  width: 100%;
+  height: auto;
 }
 
 .events_item .thumb span.category {
@@ -1190,9 +1191,23 @@ Courses Style
 }
 
 @media (max-width: 767px) {
-  .align-self-center {
-    margin-top: -150px;
-    margin-bottom: 50px;
+  .event_box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .event_outer {
+    width: 100%;
+    margin-bottom: 30px;
+  }
+
+  .events_item {
+    margin-bottom: 20px;
+  }
+
+  .events_item .down-content {
+    padding: 10px 20px;
   }
 }
 
@@ -1831,9 +1846,6 @@ footer::before {
     margin-top: 10px;
   }
 
-  .events_item {
-    margin-bottom: 130px;
-  }
   .kalkulator2 {
     margin-top: 250px;
   }
